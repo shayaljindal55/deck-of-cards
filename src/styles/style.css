@@ -1,0 +1,93 @@
+body {
+    scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #305d3c;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    min-height: 100vh;
+}
+span {
+    display: block;
+}
+.w-100 {
+    width: 100%
+}
+.outline {
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+    background: #FFF;
+    width: 200px;
+    background-color: white;
+    background-size: cover;
+    position: relative;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-left: -188px;
+    font-size: 20px;
+    text-align: center;
+    transition: all 0.25s ease;
+}
+@media only screen and (min-width: 481px) and (max-width: 640px) {
+    .outline-adjusted{
+        margin-left: -165px !important;
+        width: 140px !important;
+   }
+}
+@media only screen and (min-width: 641px) and (max-width: 960px) {
+    .outline-adjusted{
+        margin-left: -161px !important;
+        width: 140px !important;
+   }
+}
+@media only screen and (min-width: 961px) and (max-width: 1200px) {
+    .outline-adjusted{
+        margin-left: -157px !important;
+        width: 140px !important;
+   }
+}
+@media only screen and (max-width: 480px) {
+    .outline-adjusted{
+        margin-left: -170px !important;
+        width: 140px !important;
+   }
+}
+@media only screen and (min-width: 1201px) {
+    .outline-adjusted{
+        margin-left:-153px !important;
+        width: 140px !important;
+   }
+}
+.red {
+    color: #cc0033;
+}
+.black {
+    color: #000000 !important;
+}
+.top {
+    text-align: left;
+}
+.bottom {
+    text-align: right;
+}
+.shadow {
+    box-shadow: 1px 1px 3px #000;
+    -moz-box-shadow: 1px 1px 3px #000;
+    -webkit-box-shadow: 1px 1px 3px #000;
+}
+.rounded {
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+.card-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px auto 0px 180px;
+    height: 282px;
+    transition: all 0.25s ease;
+}
