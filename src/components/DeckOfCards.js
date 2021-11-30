@@ -4,11 +4,13 @@ import Cards from './Cards';
 import '../styles/style.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {sortCards} from '../shared/Utilities';
 
 export default function DeckOfCards() {
     const [deck, setDeck] = useState({ deckToShuffle: [], drawn: [] });
     const [forceUpdate, setForceUpdate] = useState(Date.now());
-    // create a deck of cards
+
+    /*  create a deck of cards */
     const createDeckOfCards = () => {
         try {
             const tempDeck = [];
@@ -20,8 +22,8 @@ export default function DeckOfCards() {
                         cardValue: values[x],
                         suit: suits[i],
                         color: redSuits.indexOf(suits[i]) !== -1 ? 'red' : 'black',
-                        suitIndex: i, // will have values in the range [0-3]
-                        rankIndex: x, // will have values in the range [0-12]
+                        suitIndex: i, /* will have values in the range [0-3] */
+                        rankIndex: x, /* will have values in the range [0-12] */
                     };
                     tempDeck.push(card);
                 }
@@ -32,7 +34,8 @@ export default function DeckOfCards() {
             showErrorToast(e);
         }
     }
-    // shuffle the cards
+
+    /* shuffle the cards */
     const shuffleDeckOfCards = (array, e) => {
         e.preventDefault();
         try {
@@ -51,15 +54,16 @@ export default function DeckOfCards() {
         }
     }
 
+    /* show error toast message */
     const showErrorToast = (e) => {
         toast.error(e, {
-            toastId: 'customId', // any random constant id to avoid duplicate toasts
+            toastId: 'customId', /* any random constant id to avoid duplicate toasts */
             theme: "colored",
             autoClose: 9000
         });
     }
 
-    // draw a random card
+    /* draw a random card */
     const drawACard = (e) => {
         try {
             e.preventDefault();
@@ -78,24 +82,18 @@ export default function DeckOfCards() {
         }
     };
 
+    /* place all the cards back in the deck in default state and clear localstorage  */
     const resetDrawnCards = (e) => {
         e.preventDefault();
         createDeckOfCards();
         window.localStorage.removeItem('deck');
     }
 
-    // sort the given deck
-    const sortDeck = (e) => {
+    /* sort the given deck */
+    const sortDeck = (drawnCards) => {
         try {
-            e.preventDefault();
-            if (deck.drawn.length > 0) {
-                deck.drawn.sort(function (a, b) {
-                    if (a.suitIndex < b.suitIndex ||
-                        (a.suitIndex === b.suitIndex && a.rankIndex < b.rankIndex)) {
-                        return -1;
-                    }
-                    return 1;
-                });
+            if (drawnCards.length > 0) {
+                deck.drawn = sortCards(drawnCards);
                 setForceUpdate(new Date());
             } else { showErrorToast(noDrawnCardSort); }
         } catch (e) {
@@ -103,11 +101,13 @@ export default function DeckOfCards() {
         }
     }
 
+    /* to preserve the current state store it in localstorage */
     const saveState = (e) => {
         e.preventDefault();
         window.localStorage.setItem('deck', JSON.stringify(deck));
     }
 
+    /* render deck of cards on initial load */
     useEffect(() => {
         const prevState = window.localStorage.getItem('deck');
         const parsedState = JSON.parse(prevState);
@@ -126,7 +126,8 @@ export default function DeckOfCards() {
             <button onClick={(event) => drawACard(event)}>Draw</button>
             <button onClick={(event) => saveState(event)}>Save</button>
             <button onClick={(event) => resetDrawnCards(event)}>Reset</button>
-            <button onClick={(event) => sortDeck(event)}>Sort</button>
+            <button onClick={(event) => sortDeck(deck.drawn)}
+                data-testid="sort-btn">Sort</button>
             <div className="card-container">
                 {deck.deckToShuffle && deck.deckToShuffle.map((card, i) => {
                     return (

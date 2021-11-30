@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cards component Matches the snapshot 1`] = `
+<div
+  className="outline outline-adjusted shadow rounded black"
+  data-testid="1"
+>
+  <div
+    className="top"
+  >
+    <span
+      data-testid="cardValue 1"
+    >
+      2
+    </span>
+    <span
+      data-testid="suit 1"
+    >
+      ♣︎
+    </span>
+  </div>
+</div>
+`;

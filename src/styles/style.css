@@ -34,25 +34,21 @@ span {
 @media only screen and (min-width: 481px) and (max-width: 640px) {
     .outline-adjusted{
         margin-left: -165px !important;
-        /* width: 140px !important; */
    }
 }
 @media only screen and (min-width: 641px) and (max-width: 960px) {
     .outline-adjusted{
         margin-left: -161px !important;
-        /* width: 140px !important; */
    }
 }
 @media only screen and (min-width: 961px) and (max-width: 1200px) {
     .outline-adjusted{
         margin-left: -157px !important;
-        /* width: 140px !important; */
    }
 }
 @media only screen and (max-width: 480px) {
     .outline-adjusted{
         margin-left: -170px !important;
-        /* width: 140px !important; */
    }
 }
 @media only screen and (min-width: 1201px) {
