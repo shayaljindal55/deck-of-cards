@@ -17,17 +17,16 @@ span {
     width: 100%
 }
 .outline {
-    text-align: center;
+    height: 80px;
+    width: 50px;
+    display: inline-block;
     padding: 10px;
     margin: 10px;
-    background: #FFF;
-    width: 200px;
+    background: #fff;
     background-color: white;
     background-size: cover;
     position: relative;
     border: 1px solid black;
-    border-radius: 10px;
-    margin-left: -188px;
     font-size: 20px;
     text-align: center;
     transition: all 0.25s ease;
@@ -35,31 +34,31 @@ span {
 @media only screen and (min-width: 481px) and (max-width: 640px) {
     .outline-adjusted{
         margin-left: -165px !important;
-        width: 140px !important;
+        /* width: 140px !important; */
    }
 }
 @media only screen and (min-width: 641px) and (max-width: 960px) {
     .outline-adjusted{
         margin-left: -161px !important;
-        width: 140px !important;
+        /* width: 140px !important; */
    }
 }
 @media only screen and (min-width: 961px) and (max-width: 1200px) {
     .outline-adjusted{
         margin-left: -157px !important;
-        width: 140px !important;
+        /* width: 140px !important; */
    }
 }
 @media only screen and (max-width: 480px) {
     .outline-adjusted{
         margin-left: -170px !important;
-        width: 140px !important;
+        /* width: 140px !important; */
    }
 }
 @media only screen and (min-width: 1201px) {
     .outline-adjusted{
         margin-left:-153px !important;
-        width: 140px !important;
+        /* width: 140px !important; */
    }
 }
 .red {
@@ -68,21 +67,11 @@ span {
 .black {
     color: #000000 !important;
 }
-.top {
-    text-align: left;
-}
-.bottom {
-    text-align: right;
-}
 .shadow {
     box-shadow: 1px 1px 3px #000;
-    -moz-box-shadow: 1px 1px 3px #000;
-    -webkit-box-shadow: 1px 1px 3px #000;
 }
 .rounded {
     border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
 }
 .card-container {
     display: flex;
@@ -90,4 +79,23 @@ span {
     margin: 40px auto 0px 180px;
     height: 282px;
     transition: all 0.25s ease;
+}
+.top {
+    text-align: left;
+}
+.bottom {
+    text-align: right;
+}
+button {
+    width: 80px;
+    height: 30px;
+    cursor: pointer;
+    margin: 1px 6px 0px 0px;
+    margin-top: 3%;
+}
+.cards{
+    width: 1040px;
+    max-width: 100%;
+    padding: 0;
+    margin: 10px auto;
 }

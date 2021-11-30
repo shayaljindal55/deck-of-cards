@@ -1,13 +1,13 @@
 import bg_img from './card-games.svg';
 import './App.css';
-import Shuffle from '../src/components/Shuffle';
+import DeckOfCards from '../src/components/DeckOfCards.js';
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-          iX Card Test
+          Deck Of Cards
           {/* <img src={bg_img} className="Bg-img" alt="logo" /> */}
-          <Shuffle />
+          <DeckOfCards />
       </header>
     </div>
   );
