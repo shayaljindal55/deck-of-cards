@@ -2,9 +2,6 @@ body {
     scroll-behavior: smooth;
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     background-color: #305d3c;
     background-repeat: no-repeat;
     background-size: auto;
@@ -82,15 +79,33 @@ span {
     text-align: right;
 }
 button {
-    width: 80px;
+    width: 90px;
     height: 30px;
     cursor: pointer;
     margin: 1px 6px 0px 0px;
     margin-top: 3%;
+    font-style: italic;
+    font-weight: 800;
+    color: white;
+    border-style: none;
+    background-color: rgb(222, 95, 95);
+    border-radius: 50px;
+    font-size: 16px;
+    font-family: 'Patrick Hand SC', cursive;  
+}
+button:hover {
+    background-color: rgb(222, 211, 95);
 }
 .cards{
     width: 1040px;
     max-width: 100%;
     padding: 0;
     margin: 10px auto;
+}
+.draw-count {
+    font-size: 14px;
+    margin: 0px 10px 0px 10px;
+}
+#draw-card {
+    max-width: 3%;
 }

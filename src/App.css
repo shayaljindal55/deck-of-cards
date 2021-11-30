@@ -22,3 +22,25 @@ body {
 .Toastify__toast-body > div:last-child {
   font-size: 14px;
 }
+.joker {
+  width: 50px;
+  height: 60px;
+  animation: rotation 8s infinite linear;
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.box-header {
+  display: flex;
+}
+.box-header span {
+  position: relative;
+  top: 15px;
+  padding: 0px 15px 0px 15px;
+  font-family: 'Patrick Hand SC', cursive;  
+}

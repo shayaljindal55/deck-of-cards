@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { suits, values, redSuits, noDrawnCardSort, noCardsInDeck } from '../shared/Constants';
+import {
+    suits, values,
+    redSuits, noDrawnCardSort, noCardsInDeck, noCardsInDrwanDeck,
+    only52allowed, numberOfCardsToDraw
+} from '../shared/Constants';
 import Cards from './Cards';
 import '../styles/style.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { sortCards } from '../shared/Utilities';
+import ReactTooltip from 'react-tooltip';
 
 export default function DeckOfCards() {
     const [deck, setDeck] = useState({ deckToShuffle: [], drawn: [] });
-    const [forceUpdate, setForceUpdate] = useState(Date.now());
-
+    // const [forceUpdate, setForceUpdate] = useState(new Date().getTime());
+    const [count, setCount] = useState(0);
     /*  create a deck of cards */
     const createDeckOfCards = () => {
         try {
@@ -28,8 +33,13 @@ export default function DeckOfCards() {
                     tempDeck.push(card);
                 }
             }
+            localStorage.setItem('currentState',
+                JSON.stringify({ deckToShuffle: tempDeck }));
             /*  default to a randomly shuffled deck */
-            shuffleDeckOfCards(tempDeck, true)
+            const currentState = localStorage.getItem('currentState');
+            const currentDeck = currentState && JSON.parse(currentState).deckToShuffle;
+            shuffleDeckOfCards(currentDeck, true);
+            window.localStorage.removeItem('currentState');
         } catch (e) {
             showErrorToast(e);
         }
@@ -47,8 +57,10 @@ export default function DeckOfCards() {
                     array[j] = temp;
                 }
                 setDeck({ ...deck, deckToShuffle: array });
-                setForceUpdate(new Date());
-            } else { showErrorToast(noCardsInDeck); }
+                setCount(count + 1);
+            } else {
+                showErrorToast(noCardsInDeck);
+            }
         } catch (e) {
             showErrorToast(e);
         }
@@ -67,16 +79,30 @@ export default function DeckOfCards() {
     const drawACard = (e) => {
         try {
             e.preventDefault();
-            if (deck.deckToShuffle.length > 0) {
-                let cardsArray = deck.deckToShuffle;
-                const randomCard = cardsArray[Math.floor(Math.random() * cardsArray.length)];
-                const newCardsArray = cardsArray.filter(e => e.id !== randomCard.id)
-                let cardsPickedArray = deck.drawn;
-                cardsPickedArray.length < 52 &&
-                    cardsPickedArray.push(randomCard);
-                setDeck({ deckToShuffle: newCardsArray, drawn: cardsPickedArray });
-                setForceUpdate(new Date());
-            } else { showErrorToast(noCardsInDeck); }
+            const count = document.getElementById("draw-card").value;
+            const numbersOfCards = parseInt(count);
+            if (numbersOfCards) {
+                if (0 < numbersOfCards && numbersOfCards < 53
+                    && numbersOfCards < deck.deckToShuffle.length) {
+                    if (deck.deckToShuffle.length > 0) {
+                        let newCardsArrayIdx = 0;
+                        let cardsPickedArray = [];
+                        for (let i = 0; i < numbersOfCards; i++) {
+                            let cardsArray = deck.deckToShuffle;
+                            const randomCard = cardsArray[Math.floor(Math.random() * cardsArray.length)];
+                            newCardsArrayIdx = cardsArray.filter(e => e.id === randomCard.id)
+                            cardsPickedArray = deck.drawn;
+                            cardsPickedArray.length < 52 &&
+                                cardsPickedArray.push(randomCard);
+                        }
+                        setDeck({ ...deck, drawn: cardsPickedArray });
+                        setCount(count + 1);
+                    }
+                    else {
+                        showErrorToast(noCardsInDeck);
+                    }
+                } else { showErrorToast(only52allowed); }
+            } else { showErrorToast(numberOfCardsToDraw); }
         } catch (e) {
             showErrorToast(e);
         }
@@ -84,9 +110,15 @@ export default function DeckOfCards() {
 
     /* place all the cards back in the deck in default state and clear localstorage  */
     const resetDrawnCards = (e) => {
-        e.preventDefault();
-        createDeckOfCards();
-        window.localStorage.removeItem('deck');
+        if (deck.drawn.length > 0) {
+            e.preventDefault();
+            createDeckOfCards();
+            window.localStorage.removeItem('deck');
+            setDeck({ ...deck, drawn: [] });
+            setCount(count + 1);
+        } else {
+            showErrorToast(noCardsInDrwanDeck);
+        }
     }
 
     /* sort the given deck */
@@ -95,7 +127,7 @@ export default function DeckOfCards() {
         try {
             if (drawnCards.length > 0) {
                 deck.drawn = sortCards(drawnCards);
-                setForceUpdate(new Date());
+                setCount(count + 1);
             } else { showErrorToast(noDrawnCardSort); }
         } catch (e) {
             showErrorToast(e);
@@ -114,7 +146,7 @@ export default function DeckOfCards() {
         const parsedState = JSON.parse(prevState);
         if (parsedState) {
             setDeck(parsedState);
-            setForceUpdate(new Date());
+            setCount(count + 1);
         } else {
             createDeckOfCards();
         }
@@ -124,8 +156,22 @@ export default function DeckOfCards() {
         <div className="w-100">
             <ToastContainer />
             <div>
-                <button onClick={(event) => shuffleDeckOfCards(deck.deckToShuffle, false, event)}>Shuffle</button>
-                <button onClick={(event) => drawACard(event)}>Draw</button>
+                <ReactTooltip id="shuffle" place="top" effect="solid">
+                    Shuffle the deck!
+                </ReactTooltip>
+                <button data-tip data-for="shuffle" id="shuffle-btn"
+                    onClick={(event) => shuffleDeckOfCards(deck.deckToShuffle, false, event)}>Shuffle</button>
+                <ReactTooltip id="draw" place="top" effect="solid">
+                    Draw a random card!
+                </ReactTooltip>
+                <button data-tip data-for="draw" id="draw-btn"
+                    onClick={(event) => drawACard(event)}>Draw</button>
+                <div>
+                    <label htmlFor="draw-card" className="draw-count">How many card you want to draw?</label>
+                    <input type="number" 
+                        alt="How many card you want to draw?"
+                        id="draw-card" />
+                </div>
             </div>
             <div className="card-container">
                 {deck.deckToShuffle && deck.deckToShuffle.map((card, i) => {
@@ -138,16 +184,28 @@ export default function DeckOfCards() {
                 })}
             </div>
             <div>
-                <button onClick={(event) => saveState(event)}>Save</button>
-                <button onClick={(event) => resetDrawnCards(event)}>Reset</button>
-                <button onClick={(event) => sortDeck(deck.drawn, event)}
+                <ReactTooltip id="save" place="top" effect="solid">
+                    Save the game!
+                </ReactTooltip>
+                <button data-tip data-for="save" id="save-btn"
+                    onClick={(event) => saveState(event)}>Save</button>
+                <ReactTooltip id="reset" place="top" effect="solid">
+                    Reset the game!
+                </ReactTooltip>
+                <button data-tip data-for="reset" id="reset-btn"
+                    onClick={(event) => resetDrawnCards(event)}>Reset</button>
+                <ReactTooltip id="sort" place="top" effect="solid">
+                    Sort the drawn cards!
+                </ReactTooltip>
+                <button data-tip data-for="sort" id="sort-btn"
+                    onClick={(event) => sortDeck(deck.drawn, event)}
                     data-testid="sort-btn">Sort</button>
             </div>
             <div className="card-container">
                 {deck.drawn && deck.drawn.map((card, i) => {
                     return (
                         <div key={card.id} className="cards">
-                            <Cards suit={card.suit} cardValue={card.cardValue} color={card.color}/>
+                            <Cards suit={card.suit} cardValue={card.cardValue} color={card.color} />
                         </div>
                     );
                 })}
