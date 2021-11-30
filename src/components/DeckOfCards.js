@@ -4,7 +4,7 @@ import Cards from './Cards';
 import '../styles/style.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {sortCards} from '../shared/Utilities';
+import { sortCards } from '../shared/Utilities';
 
 export default function DeckOfCards() {
     const [deck, setDeck] = useState({ deckToShuffle: [], drawn: [] });
@@ -28,18 +28,18 @@ export default function DeckOfCards() {
                     tempDeck.push(card);
                 }
             }
-            setDeck({ deckToShuffle: tempDeck, drawn: [] });
-            setForceUpdate(new Date());
+            /*  default to a randomly shuffled deck */
+            shuffleDeckOfCards(tempDeck, true)
         } catch (e) {
             showErrorToast(e);
         }
     }
 
     /* shuffle the cards */
-    const shuffleDeckOfCards = (array, e) => {
-        e.preventDefault();
+    const shuffleDeckOfCards = (array, onLoad = false, e = null) => {
+        e && e.preventDefault();
         try {
-            if (deck.deckToShuffle.length > 0) {
+            if (onLoad || deck.deckToShuffle.length > 0) {
                 for (let i = array.length - 1; i > 0; i--) {
                     let j = Math.floor(Math.random() * i);
                     let temp = array[i];
@@ -90,7 +90,8 @@ export default function DeckOfCards() {
     }
 
     /* sort the given deck */
-    const sortDeck = (drawnCards) => {
+    const sortDeck = (drawnCards, e) => {
+        e && e.preventDefault();
         try {
             if (drawnCards.length > 0) {
                 deck.drawn = sortCards(drawnCards);
@@ -122,12 +123,10 @@ export default function DeckOfCards() {
     return (
         <div className="w-100">
             <ToastContainer />
-            <button onClick={(event) => shuffleDeckOfCards(deck.deckToShuffle, event)}>Shuffle</button>
-            <button onClick={(event) => drawACard(event)}>Draw</button>
-            <button onClick={(event) => saveState(event)}>Save</button>
-            <button onClick={(event) => resetDrawnCards(event)}>Reset</button>
-            <button onClick={(event) => sortDeck(deck.drawn)}
-                data-testid="sort-btn">Sort</button>
+            <div>
+                <button onClick={(event) => shuffleDeckOfCards(deck.deckToShuffle, false, event)}>Shuffle</button>
+                <button onClick={(event) => drawACard(event)}>Draw</button>
+            </div>
             <div className="card-container">
                 {deck.deckToShuffle && deck.deckToShuffle.map((card, i) => {
                     return (
@@ -138,15 +137,22 @@ export default function DeckOfCards() {
                     );
                 })}
             </div>
+            <div>
+                <button onClick={(event) => saveState(event)}>Save</button>
+                <button onClick={(event) => resetDrawnCards(event)}>Reset</button>
+                <button onClick={(event) => sortDeck(deck.drawn, event)}
+                    data-testid="sort-btn">Sort</button>
+            </div>
             <div className="card-container">
                 {deck.drawn && deck.drawn.map((card, i) => {
                     return (
                         <div key={card.id} className="cards">
-                            <Cards suit={card.suit} cardValue={card.cardValue} color={card.color} />
+                            <Cards suit={card.suit} cardValue={card.cardValue} color={card.color}/>
                         </div>
                     );
                 })}
             </div>
+
         </div>
     )
 }

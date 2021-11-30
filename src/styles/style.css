@@ -7,7 +7,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
     background-color: #305d3c;
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: auto;
     min-height: 100vh;
 }
 span {
@@ -54,7 +54,6 @@ span {
 @media only screen and (min-width: 1201px) {
     .outline-adjusted{
         margin-left:-153px !important;
-        /* width: 140px !important; */
    }
 }
 .red {
@@ -73,7 +72,7 @@ span {
     display: flex;
     justify-content: center;
     margin: 40px auto 0px 180px;
-    height: 282px;
+    height: 125px;
     transition: all 0.25s ease;
 }
 .top {

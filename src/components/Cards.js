@@ -4,7 +4,7 @@ import '../styles/style.css';
 export default function Cards(props) {
     const { suit, cardValue, color, id } = props;
     return (
-        <div className={`outline outline-adjusted shadow rounded ${color}`}
+        <div className={`outline outline-adjusted shadow rounded ${color} `}
             key={id}
             data-testid={id}>
             <div className="top">

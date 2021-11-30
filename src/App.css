@@ -1,6 +1,9 @@
 .App {
   text-align: center;
 }
+body {
+  overflow: hidden;
+}
 
 .Bg-img {
   height: 60vmin;
@@ -15,7 +18,6 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  margin-top: 1%;
 }
 .Toastify__toast-body > div:last-child {
   font-size: 14px;
