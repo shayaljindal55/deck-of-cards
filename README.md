@@ -11,7 +11,7 @@ Today I will show a few jaw-dropping 😲 magic tricks 🔮 using playing cards 
 
 Are you ready? 🎬
 
-Need a sneak peek 👀 inside my treasure 💰💍👑? Here you go 🤗 :
+Need a sneak peek 👀 inside my treasure app💰💍👑? Here you go 🤗 :
 
 ![Creating](statics/images/deckofcards1.gif "demo-video")
 
