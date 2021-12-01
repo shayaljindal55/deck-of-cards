@@ -13,8 +13,7 @@ import ReactTooltip from 'react-tooltip';
 
 export default function DeckOfCards() {
     const [deck, setDeck] = useState({ deckToShuffle: [], drawn: [] });
-    // const [forceUpdate, setForceUpdate] = useState(new Date().getTime());
-    const [count, setCount] = useState(0);
+    ;
     /*  create a deck of cards */
     const createDeckOfCards = () => {
         try {
@@ -46,7 +45,7 @@ export default function DeckOfCards() {
     }
 
     /* shuffle the cards */
-    const shuffleDeckOfCards = (array, onLoad = false, e = null) => {
+    const shuffleDeckOfCards = async (array, onLoad = false, e = null) => {
         e && e.preventDefault();
         try {
             if (onLoad || deck.deckToShuffle.length > 0) {
@@ -56,8 +55,11 @@ export default function DeckOfCards() {
                     array[i] = array[j];
                     array[j] = temp;
                 }
-                setDeck({ ...deck, deckToShuffle: array });
-                setCount(count + 1);
+                if (onLoad) {
+                    await setDeck(prevDeck => ({ deckToShuffle: array, drawn: [] }));
+                } else {
+                    await setDeck(prevDeck => ({ ...deck, deckToShuffle: array }));
+                }
             } else {
                 showErrorToast(noCardsInDeck);
             }
@@ -76,7 +78,7 @@ export default function DeckOfCards() {
     }
 
     /* draw a random card */
-    const drawACard = (e) => {
+    const drawACard = async (e) => {
         try {
             e.preventDefault();
             const count = document.getElementById("draw-card").value;
@@ -85,18 +87,24 @@ export default function DeckOfCards() {
                 if (0 < numbersOfCards && numbersOfCards < 53
                     && numbersOfCards < deck.deckToShuffle.length) {
                     if (deck.deckToShuffle.length > 0) {
-                        let newCardsArrayIdx = 0;
+                        let newCardsArray = [];
                         let cardsPickedArray = [];
+                        let cardsArray = deck.deckToShuffle;
                         for (let i = 0; i < numbersOfCards; i++) {
-                            let cardsArray = deck.deckToShuffle;
-                            const randomCard = cardsArray[Math.floor(Math.random() * cardsArray.length)];
-                            newCardsArrayIdx = cardsArray.filter(e => e.id === randomCard.id)
+                            let randomCard = cardsArray[Math.floor(Math.random() * cardsArray.length)];
+                            if (deck.drawn.findIndex(x => x.id === randomCard.id) !== -1) {
+                                randomCard = cardsArray[Math.floor(Math.random() * cardsArray.length)];
+                            }
                             cardsPickedArray = deck.drawn;
                             cardsPickedArray.length < 52 &&
                                 cardsPickedArray.push(randomCard);
                         }
-                        setDeck({ ...deck, drawn: cardsPickedArray });
-                        setCount(count + 1);
+                        newCardsArray = cardsArray.filter(function (obj) { return cardsPickedArray.indexOf(obj) === -1; });
+
+                        await setDeck(prevDeck => ({
+                            deckToShuffle: newCardsArray,
+                            drawn: cardsPickedArray
+                        }));
                     }
                     else {
                         showErrorToast(noCardsInDeck);
@@ -109,25 +117,19 @@ export default function DeckOfCards() {
     };
 
     /* place all the cards back in the deck in default state and clear localstorage  */
-    const resetDrawnCards = (e) => {
-        if (deck.drawn.length > 0) {
-            e.preventDefault();
-            createDeckOfCards();
-            window.localStorage.removeItem('deck');
-            setDeck({ ...deck, drawn: [] });
-            setCount(count + 1);
-        } else {
-            showErrorToast(noCardsInDrwanDeck);
-        }
+    const resetDrawnCards = async (e) => {
+        e.preventDefault();
+        createDeckOfCards();
+        window.localStorage.removeItem('deck');
     }
 
     /* sort the given deck */
-    const sortDeck = (drawnCards, e) => {
+    const sortDeck = async (drawnCards, e) => {
         e && e.preventDefault();
         try {
             if (drawnCards.length > 0) {
                 deck.drawn = sortCards(drawnCards);
-                setCount(count + 1);
+                await setDeck(prevDeck => ({ ...deck, drawn: deck.drawn }));
             } else { showErrorToast(noDrawnCardSort); }
         } catch (e) {
             showErrorToast(e);
@@ -141,16 +143,21 @@ export default function DeckOfCards() {
     }
 
     /* render deck of cards on initial load */
-    useEffect(() => {
+    useEffect(async () => {
         const prevState = window.localStorage.getItem('deck');
         const parsedState = JSON.parse(prevState);
         if (parsedState) {
-            setDeck(parsedState);
-            setCount(count + 1);
+            await setDeck(prevDeck => (parsedState));
         } else {
             createDeckOfCards();
         }
     }, []);
+
+    useEffect(() => {
+        if (deck.deckToShuffle.length > 0 || deck.drawn.length > 0) {
+            setDeck(deck);
+        }
+    }, [deck]);
 
     return (
         <div className="w-100">
@@ -168,7 +175,7 @@ export default function DeckOfCards() {
                     onClick={(event) => drawACard(event)}>Draw</button>
                 <div>
                     <label htmlFor="draw-card" className="draw-count">How many card you want to draw?</label>
-                    <input type="number" 
+                    <input type="number"
                         alt="How many card you want to draw?"
                         id="draw-card" />
                 </div>
