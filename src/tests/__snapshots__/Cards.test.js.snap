@@ -2,7 +2,7 @@
 
 exports[`Cards component Matches the snapshot 1`] = `
 <div
-  className="outline outline-adjusted shadow rounded black"
+  className="outline outline-adjusted shadow rounded black "
   data-testid="1"
 >
   <div
