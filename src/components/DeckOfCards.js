@@ -85,26 +85,9 @@ export default function DeckOfCards() {
             const numbersOfCards = parseInt(count);
             if (numbersOfCards) {
                 if (0 < numbersOfCards && numbersOfCards < 53
-                    && numbersOfCards < deck.deckToShuffle.length) {
+                    && numbersOfCards <= deck.deckToShuffle.length) {
                     if (deck.deckToShuffle.length > 0) {
-                        let newCardsArray = [];
-                        let cardsPickedArray = [];
-                        let cardsArray = deck.deckToShuffle;
-                        cardsPickedArray = deck.drawn;
-                        for (let i = 0; i < numbersOfCards; i++) {
-                            const random = getUniqueId(cardsArray);
-                            let randomCard = random && cardsArray[random];
-                            randomCard && cardsPickedArray.length < 52 &&
-                                cardsPickedArray.push(randomCard);
-                        }
-                        newCardsArray = cardsArray.filter(function (obj) {
-                            return cardsPickedArray.indexOf(obj) === -1;
-                        });
-
-                        await setDeck(prevDeck => ({
-                            deckToShuffle: newCardsArray,
-                            drawn: cardsPickedArray
-                        }));
+                        drawCards(numbersOfCards);
                     }
                     else {
                         showErrorToast(noCardsInDeck);
@@ -116,17 +99,25 @@ export default function DeckOfCards() {
         }
     };
 
-    const getUniqueId = (cardsArray) => {
-        try {
-            const random = Math.floor(Math.random() * cardsArray.length);
-            if (deck.drawn.findIndex(x => x && x.id && x.id === random) !== -1) {
-                return getUniqueId(cardsArray);
-            } else {
-                return random;
-            }
-        } catch (e) {
-            console.log(e)
+    /* draw  random cards by count */
+    async function drawCards(cardsToDraw = 1, rand = true) {
+        var c;
+        const origDeck = deck.deckToShuffle.map(obj => ({ ...obj }));
+        const drawnCards = deck.drawn ? deck.drawn : [];
+        while (cardsToDraw-- > 0 && origDeck.length) {
+            (c = (rand ? random() : origDeck.pop())) !== undefined && drawnCards.push(c);
         }
+
+        await setDeck(prevDeck => ({
+            ...deck,
+            drawn: drawnCards
+        }));
+    }
+
+    function random() {
+        const randIdx = () => Math.random() * deck.length | 0;
+        return deck.deckToShuffle.length ?
+            deck.deckToShuffle.splice(randIdx(), 1)[0] : undefined;
     }
 
     /* place all the cards back in the deck in default state and clear localstorage  */
