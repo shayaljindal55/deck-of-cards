@@ -19,7 +19,7 @@ Need a sneak peek 👀 inside my treasure app💰💍👑? Here you go 🤗 :
 ## Documentation
 Details of the app are available at the below link 👇
 
-[Documentation](http://deck-of-cards.s3-website.eu-west-2.amazonaws.com/documentation.html)
+[Documentation - Deck of Cards 🃏](http://deck-of-cards.s3-website.eu-west-2.amazonaws.com/documentation.html)
 
 ## Author
 👩‍💻 [@shayaljindal](https://www.linkedin.com/in/shayal-jindal-522b01a4/)
