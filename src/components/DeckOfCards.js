@@ -13,7 +13,7 @@ import ReactTooltip from 'react-tooltip';
 
 export default function DeckOfCards() {
     const [deck, setDeck] = useState({ deckToShuffle: [], drawn: [] });
-    ;
+
     /*  create a deck of cards */
     const createDeckOfCards = () => {
         try {
