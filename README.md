@@ -5,7 +5,7 @@ Hello and welcome to my show 👋👋👋👋👋👋!!!!!
 
 ![Creating](statics/images/magician.png "magician")
 
-I am self-proclaimed 😊 world famous ✰⋆🌟✪🔯✨ magician 🧙.
+I am a self-proclaimed 😄 world famous ✰⋆🌟✪🔯✨ magician 🧙.
 
 Today I will show a few jaw-dropping 😲 magic tricks 🔮 using playing cards 🃏.
 
