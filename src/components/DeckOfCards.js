@@ -22,7 +22,7 @@ export default function DeckOfCards() {
             for (let i = 0; i < suits.length; i++) {
                 for (let x = 0; x < values.length; x++) {
                     let card = {
-                        id: counter++,
+                        id: ++counter,
                         cardValue: values[x],
                         suit: suits[i],
                         color: redSuits.indexOf(suits[i]) !== -1 ? 'red' : 'black',
@@ -90,16 +90,16 @@ export default function DeckOfCards() {
                         let newCardsArray = [];
                         let cardsPickedArray = [];
                         let cardsArray = deck.deckToShuffle;
+                        cardsPickedArray = deck.drawn;
                         for (let i = 0; i < numbersOfCards; i++) {
-                            let randomCard = cardsArray[Math.floor(Math.random() * cardsArray.length)];
-                            if (deck.drawn.findIndex(x => x.id === randomCard.id) !== -1) {
-                                randomCard = cardsArray[Math.floor(Math.random() * cardsArray.length)];
-                            }
-                            cardsPickedArray = deck.drawn;
-                            cardsPickedArray.length < 52 &&
+                            const random = getUniqueId(cardsArray);
+                            let randomCard = random && cardsArray[random];
+                            randomCard && cardsPickedArray.length < 52 &&
                                 cardsPickedArray.push(randomCard);
                         }
-                        newCardsArray = cardsArray.filter(function (obj) { return cardsPickedArray.indexOf(obj) === -1; });
+                        newCardsArray = cardsArray.filter(function (obj) {
+                            return cardsPickedArray.indexOf(obj) === -1;
+                        });
 
                         await setDeck(prevDeck => ({
                             deckToShuffle: newCardsArray,
@@ -115,6 +115,19 @@ export default function DeckOfCards() {
             showErrorToast(e);
         }
     };
+
+    const getUniqueId = (cardsArray) => {
+        try {
+            const random = Math.floor(Math.random() * cardsArray.length);
+            if (deck.drawn.findIndex(x => x && x.id && x.id === random) !== -1) {
+                return getUniqueId(cardsArray);
+            } else {
+                return random;
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     /* place all the cards back in the deck in default state and clear localstorage  */
     const resetDrawnCards = async (e) => {
